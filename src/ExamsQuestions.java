@@ -273,33 +273,88 @@ public class ExamsQuestions {
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
+    public static int maxSumKnight(int[][] mat){
+        return maxSumKnight(mat, 0, 0,mat[0][0] - 1);
+    }
+
+    private static int maxSumKnight(int[][] mat, int i, int j, int prevValue) {
+        if(i == mat.length - 1 && j == mat[i].length - 1){
+            return mat[i][j];
+        }
+
+        if(i < 0 || j < 0 || i >= mat.length || j >= mat[i].length){
+            return -1;
+        }
+
+        if (mat[i][j] == -1) {
+            return -1;
+        }
+
+        if(prevValue + 1 != mat[i][j] && prevValue - 1 != mat[i][j]) {
+            return -1;
+        }
+
+        int tmp = mat[i][j];
+        mat[i][j] = -1;
+
+        int moveKnightOpt1 = maxSumKnight(mat, i + 2, j + 1, tmp);
+        int moveKnightOpt2 = maxSumKnight(mat, i + 2, j - 1, tmp);
+        int moveKnightOpt3 = maxSumKnight(mat, i + 1, j + 2, tmp);
+        int moveKnightOpt4 = maxSumKnight(mat, i - 1, j + 2, tmp);
+        int moveKnightOpt5 = maxSumKnight(mat, i - 2, j + 1, tmp);
+        int moveKnightOpt6 = maxSumKnight(mat, i - 2, j - 1, tmp);
+        int moveKnightOpt7 = maxSumKnight(mat, i - 1, j - 2, tmp);
+        int moveKnightOpt8 = maxSumKnight(mat, i + 1, j - 2, tmp);
+
+        mat[i][j] = tmp;
+
+        int max1 = Math.max(Math.max(moveKnightOpt1, moveKnightOpt2), Math.max(moveKnightOpt3, moveKnightOpt4));
+        int max2 = Math.max(Math.max(moveKnightOpt5, moveKnightOpt6), Math.max(moveKnightOpt7, moveKnightOpt8));
+
+        int max = Math.max(max1, max2);
+
+        if(max == -1){
+            return -1;
+        } else {
+            return tmp + max;
+        }
+    }
+
     public static void main(String[] args) {
 
-        int[][] matt1 = {
-                {3,13,15,28,30},
-                {50, 51,52,29,30},
-                {51,10,53,54,55},
-                {53,12,14,53,11}
+//        int[][] matt1 = {
+//                {3,13,15,28,30},
+//                {50, 51,52,29,30},
+//                {51,10,53,54,55},
+//                {53,12,14,53,11}
+//        };
+//
+//        int [][] matt2 = {
+//                {3,13,15,28,30},
+//                {40, 51,52,29,30},
+//                {28,10,53,54,53},
+//                {53,12,55,53,60},
+//                {70,62,56,20,80},
+//                {80,81,90,95,100}
+//        };
+//
+//        int[] a = {-3,0,2,4,11,12,15, 7};
+//
+//        int[][] binaryMatt = {
+//                {1,1,1,1,1,1,1},
+//                {1,1,0,1,0,0,1},
+//                {1,1,1,1,0,1,1}
+//        };
+
+        int[][] knightBoard = {
+                {4,5,6,7,1},
+                {3,5,1,7,4},
+                {4,5,6,5,8},
+                {3,4,7,7,9},
+                {6,2,2,7,6}
         };
 
-        int [][] matt2 = {
-                {3,13,15,28,30},
-                {40, 51,52,29,30},
-                {28,10,53,54,53},
-                {53,12,55,53,60},
-                {70,62,56,20,80},
-                {80,81,90,95,100}
-        };
-
-        int[] a = {-3,0,2,4,11,12,15, 7};
-
-        int[][] binaryMatt = {
-                {1,1,1,1,1,1,1},
-                {1,1,0,1,0,0,1},
-                {1,1,1,1,0,1,1}
-        };
-
-        System.out.println(longestPath(binaryMatt, 2, 5));
+        System.out.println(maxSumKnight(knightBoard));
 
     }
 }
