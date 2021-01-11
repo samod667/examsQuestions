@@ -1,5 +1,5 @@
 public class ExamsQuestions {
-    ///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
     public static boolean isSum(int[] a, int num) {
         return isSum(a, num, 0, 0);
@@ -33,7 +33,7 @@ public class ExamsQuestions {
 
     }
 
-////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
     ///Calculates the shortest road between to roads
     public static int shortestRoad(int[] road1, int[] road2) {
@@ -103,6 +103,35 @@ public class ExamsQuestions {
             }
         }
         return false;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///A function that will return the number which the value will be equal to the index in the array a
+    public static int fixedPoint(int[] a){
+        int low = 0, high = a.length - 1, mid = 0;
+
+        while(low <= high){
+            mid = (low + high) / 2;
+
+            if(a[mid] == mid){
+                return a[mid];
+            }
+            if(a[low] == low){
+                return a[low];
+            }
+
+            if(a[high] == high){
+                return a[high];
+            }
+
+            if(a[mid] > mid){
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+
+        return -1;
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -214,8 +243,35 @@ public class ExamsQuestions {
         return Math.min(Math.min(option1, option2), Math.min(option3, option4));
     }
 
+///////////////////////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////
+    ///Will find the longest path from (0,0) in the array to (x,y) that goes only through 1 values --> 2019,83
+    public static int longestPath(int[][] mat, int x, int y){
+        return longestPath(mat,x, y, 0, 0, 0 );
+    }
+
+    private static int longestPath(int[][] mat, int x, int y, int i, int j, int count) {
+        if(i == x && j == y){
+            return count + 1;
+        }
+
+        if(i < 0 || j < 0 || i == mat.length || j == mat[i].length || mat[i][j] == 0) {
+            return Integer.MIN_VALUE;
+        }
+
+        mat[i][j] = 0;
+
+        int up = longestPath(mat, x, y, i + 1, j, count + 1);
+        int down = longestPath(mat, x, y, i - 1, j, count + 1);
+        int right = longestPath(mat, x, y, i , j + 1, count + 1);
+        int left = longestPath(mat, x, y, i, j - 1, count + 1);
+
+        mat[i][j] = 1;
+
+        return Math.max(Math.max(up, down), Math.max(right, left));
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
 
@@ -235,7 +291,15 @@ public class ExamsQuestions {
                 {80,81,90,95,100}
         };
 
-        System.out.println(shortestPath(matt2));
+        int[] a = {-3,0,2,4,11,12,15, 7};
+
+        int[][] binaryMatt = {
+                {1,1,1,1,1,1,1},
+                {1,1,0,1,0,0,1},
+                {1,1,1,1,0,1,1}
+        };
+
+        System.out.println(longestPath(binaryMatt, 2, 5));
 
     }
 }
