@@ -5,16 +5,16 @@ public class ExamsQuestions {
         return isSum(a, num, 0, 0);
     }
 
-    private static boolean isSum(int[] a, int num,int pre, int i) {
-        if(num == 0) {
+    private static boolean isSum(int[] a, int num, int pre, int i) {
+        if (num == 0) {
             return true;
         }
 
-        if(i >= a.length) {
+        if (i >= a.length) {
             return false;
         }
 
-        if(num < 0) {
+        if (num < 0) {
             return false;
         }
 
@@ -22,14 +22,14 @@ public class ExamsQuestions {
         boolean temp2 = false;
         boolean temp3 = false;
 
-        if(pre + 1 == i) {
+        if (pre + 1 == i) {
             temp1 = isSum(a, num - a[i], i, i + 2);
         } else {
             temp2 = isSum(a, num - a[i], i, i + 1);
-            temp3 = isSum(a, num, pre, i+1);
+            temp3 = isSum(a, num, pre, i + 1);
         }
 
-        return temp1 || temp2 ||temp3;
+        return temp1 || temp2 || temp3;
 
     }
 
@@ -71,9 +71,9 @@ public class ExamsQuestions {
         for (int i = 0; i < a.length; i++) {
             halfSum += a[i];
 
-            if(halfSum * 2 == sum) {
+            if (halfSum * 2 == sum) {
                 return i;
-            } else if(halfSum * 2 > sum) {
+            } else if (halfSum * 2 > sum) {
                 return Integer.MIN_VALUE;
             }
         }
@@ -85,20 +85,20 @@ public class ExamsQuestions {
 
     //finds if there is a following two values in the array which their sum is equal to x
     public static boolean findX(int[] arr, int x) {
-        int low = 0, high = arr.length-1, mid = 0;
+        int low = 0, high = arr.length - 1, mid = 0;
 
-        while(low < high) {
+        while (low < high) {
             mid = (low + high) / 2;
 
-            if(arr[mid] + arr[mid + 1] == x) {
+            if (arr[mid] + arr[mid + 1] == x) {
                 return true;
-            } else if(arr[mid] + arr[mid - 1] == x) {
+            } else if (arr[mid] + arr[mid - 1] == x) {
                 return true;
             }
 
-            if(arr[mid] + arr[mid + 1] > x) {
+            if (arr[mid] + arr[mid + 1] > x) {
                 high = mid - 1;
-            } else if(arr[mid] + arr[mid + 1] < x) {
+            } else if (arr[mid] + arr[mid + 1] < x) {
                 low = mid + 1;
             }
         }
@@ -107,24 +107,24 @@ public class ExamsQuestions {
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     ///A function that will return the number which the value will be equal to the index in the array a
-    public static int fixedPoint(int[] a){
+    public static int fixedPoint(int[] a) {
         int low = 0, high = a.length - 1, mid = 0;
 
-        while(low <= high){
+        while (low <= high) {
             mid = (low + high) / 2;
 
-            if(a[mid] == mid){
+            if (a[mid] == mid) {
                 return a[mid];
             }
-            if(a[low] == low){
+            if (a[low] == low) {
                 return a[low];
             }
 
-            if(a[high] == high){
+            if (a[high] == high) {
                 return a[high];
             }
 
-            if(a[mid] > mid){
+            if (a[mid] > mid) {
                 high = mid - 1;
             } else {
                 low = mid + 1;
@@ -147,27 +147,26 @@ public class ExamsQuestions {
         return arithmeticMissingValue(arr, low, high, diff);
     }
 
-    private static int arithmeticMissingValue(int[] arr,int low, int high,int diff) {
+    private static int arithmeticMissingValue(int[] arr, int low, int high, int diff) {
         int mid = 0;
 
-        while(low <= high) {
+        while (low <= high) {
             mid = (low + high) / 2;
 
-            if(arr[mid + 1] - arr[mid] != diff) {
+            if (arr[mid + 1] - arr[mid] != diff) {
                 return arr[mid] + diff;
             }
 
-            if(mid > 0 && arr[mid] - arr[mid - 1] != diff) {
+            if (mid > 0 && arr[mid] - arr[mid - 1] != diff) {
                 return arr[mid] - diff;
             }
 
-            if(arr[mid] == arr[0] + mid * diff) {
+            if (arr[mid] == arr[0] + mid * diff) {
                 low = mid + 1;
             } else {
-                high = mid -1;
+                high = mid - 1;
             }
         }
-
 
 
         return Integer.MIN_VALUE;
@@ -181,18 +180,18 @@ public class ExamsQuestions {
     }
 
     private static int longestWorm(int[][] matt, int i, int j) {
-        if(i == matt.length) {
+        if (i == matt.length) {
             return 0;
         }
 
-        if(j == matt[i].length) {
+        if (j == matt[i].length) {
             return longestWorm(matt, i + 1, 0);
         }
 
-        int r1 = longestWorm(matt, i + 1 ,j , matt[i][j]);
-        int r2 = longestWorm(matt, i -1 ,j , matt[i][j]);
-        int r3 = longestWorm(matt, i ,j +1 , matt[i][j]);
-        int r4 = longestWorm(matt, i ,j - 1 , matt[i][j]);
+        int r1 = longestWorm(matt, i + 1, j, matt[i][j]);
+        int r2 = longestWorm(matt, i - 1, j, matt[i][j]);
+        int r3 = longestWorm(matt, i, j + 1, matt[i][j]);
+        int r4 = longestWorm(matt, i, j - 1, matt[i][j]);
 
         int r = Math.max(Math.max(r1, r2), Math.max(r3, r4)) + 1;
 
@@ -200,18 +199,18 @@ public class ExamsQuestions {
     }
 
     private static int longestWorm(int[][] matt, int i, int j, int prevCell) {
-        if(i < 0 || i == matt.length || j < 0 || j == matt[i].length) {
+        if (i < 0 || i == matt.length || j < 0 || j == matt[i].length) {
             return 0;
         }
 
-        if(matt[i][j] != prevCell + 1) {
+        if (matt[i][j] != prevCell + 1) {
             return 0;
         }
 
-        int r1 = longestWorm(matt, i + 1 ,j, matt[i][j]);
-        int r2 = longestWorm(matt, i -1 ,j , matt[i][j]);
-        int r3 = longestWorm(matt, i ,j +1 , matt[i][j]);
-        int r4 = longestWorm(matt, i ,j - 1 , matt[i][j]);
+        int r1 = longestWorm(matt, i + 1, j, matt[i][j]);
+        int r2 = longestWorm(matt, i - 1, j, matt[i][j]);
+        int r3 = longestWorm(matt, i, j + 1, matt[i][j]);
+        int r4 = longestWorm(matt, i, j - 1, matt[i][j]);
         int r = Math.max(Math.max(r1, r2), Math.max(r3, r4));
 
         return r + 1;
@@ -227,17 +226,17 @@ public class ExamsQuestions {
     }
 
     private static int shortestPath(int[][] matt, int i, int j, int prevValue, int count) {
-        if(i < 0 || j < 0 || i == matt.length || j == matt[i].length || matt[i][j] <= prevValue) {
+        if (i < 0 || j < 0 || i == matt.length || j == matt[i].length || matt[i][j] <= prevValue) {
             return Integer.MAX_VALUE;
         }
 
-        if(i == matt.length - 1 && j == matt[i].length - 1) {
-            return count+1;
+        if (i == matt.length - 1 && j == matt[i].length - 1) {
+            return count + 1;
         }
 
-        int option1 =  shortestPath(matt, i + 1, j, matt[i][j], count + 1);
-        int option2 =  shortestPath(matt, i - 1, j, matt[i][j], count + 1);
-        int option3 =  shortestPath(matt, i, j + 1, matt[i][j], count + 1);
+        int option1 = shortestPath(matt, i + 1, j, matt[i][j], count + 1);
+        int option2 = shortestPath(matt, i - 1, j, matt[i][j], count + 1);
+        int option3 = shortestPath(matt, i, j + 1, matt[i][j], count + 1);
         int option4 = shortestPath(matt, i, j - 1, matt[i][j], count + 1);
 
         return Math.min(Math.min(option1, option2), Math.min(option3, option4));
@@ -246,16 +245,16 @@ public class ExamsQuestions {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
     ///Will find the longest path from (0,0) in the array to (x,y) that goes only through 1 values --> 2019,83
-    public static int longestPath(int[][] mat, int x, int y){
-        return longestPath(mat,x, y, 0, 0, 0 );
+    public static int longestPath(int[][] mat, int x, int y) {
+        return longestPath(mat, x, y, 0, 0, 0);
     }
 
     private static int longestPath(int[][] mat, int x, int y, int i, int j, int count) {
-        if(i == x && j == y){
+        if (i == x && j == y) {
             return count + 1;
         }
 
-        if(i < 0 || j < 0 || i == mat.length || j == mat[i].length || mat[i][j] == 0) {
+        if (i < 0 || j < 0 || i == mat.length || j == mat[i].length || mat[i][j] == 0) {
             return Integer.MIN_VALUE;
         }
 
@@ -263,7 +262,7 @@ public class ExamsQuestions {
 
         int up = longestPath(mat, x, y, i + 1, j, count + 1);
         int down = longestPath(mat, x, y, i - 1, j, count + 1);
-        int right = longestPath(mat, x, y, i , j + 1, count + 1);
+        int right = longestPath(mat, x, y, i, j + 1, count + 1);
         int left = longestPath(mat, x, y, i, j - 1, count + 1);
 
         mat[i][j] = 1;
@@ -273,16 +272,16 @@ public class ExamsQuestions {
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    public static int maxSumKnight(int[][] mat){
-        return maxSumKnight(mat, 0, 0,mat[0][0] - 1);
+    public static int maxSumKnight(int[][] mat) {
+        return maxSumKnight(mat, 0, 0, mat[0][0] - 1);
     }
 
     private static int maxSumKnight(int[][] mat, int i, int j, int prevValue) {
-        if(i == mat.length - 1 && j == mat[i].length - 1){
+        if (i == mat.length - 1 && j == mat[i].length - 1) {
             return mat[i][j];
         }
 
-        if(i < 0 || j < 0 || i >= mat.length || j >= mat[i].length){
+        if (i < 0 || j < 0 || i >= mat.length || j >= mat[i].length) {
             return -1;
         }
 
@@ -290,7 +289,7 @@ public class ExamsQuestions {
             return -1;
         }
 
-        if(prevValue + 1 != mat[i][j] && prevValue - 1 != mat[i][j]) {
+        if (prevValue + 1 != mat[i][j] && prevValue - 1 != mat[i][j]) {
             return -1;
         }
 
@@ -313,11 +312,50 @@ public class ExamsQuestions {
 
         int max = Math.max(max1, max2);
 
-        if(max == -1){
+        if (max == -1) {
             return -1;
         } else {
             return tmp + max;
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //A function that calculates the longest palindrome sequence in an Array --> 2019,85
+    public static int longestPalindrome(int[] a){
+        return longestPalindrome(a, 0, 1);
+    }
+
+    private static int longestPalindrome(int[] a, int baseIndex, int j) {
+        if(baseIndex == a.length){
+            return 1;
+        }
+
+        if(j == a.length){
+            return longestPalindrome(a, baseIndex + 1, baseIndex + 1);
+        }
+        int palindromeRes = 0;
+
+        if(a[baseIndex] == a[j]){
+            palindromeRes = longestPalindrome(a, baseIndex, j, 0);
+        }
+
+        return Math.max(palindromeRes, longestPalindrome(a, baseIndex, j + 1));
+    }
+
+    private static int longestPalindrome(int[] a, int start, int end, int count){
+        if(a[start] != a[end]){
+            return 0;
+        }
+
+        if(start > end){
+            return count;
+        }
+
+        if(start == end){
+            return count + 1;
+        }
+
+        return longestPalindrome(a, start + 1, end - 1, count + 2);
     }
 
     public static void main(String[] args) {
@@ -346,15 +384,18 @@ public class ExamsQuestions {
 //                {1,1,1,1,0,1,1}
 //        };
 
-        int[][] knightBoard = {
-                {4,5,6,7,1},
-                {3,5,1,7,4},
-                {4,5,6,5,8},
-                {3,4,7,7,9},
-                {6,2,2,7,6}
-        };
+//        int[][] knightBoard = {
+//                {4, 5, 6, 7, 1},
+//                {3, 5, 1, 7, 4},
+//                {4, 5, 6, 5, 8},
+//                {3, 4, 7, 7, 9},
+//                {6, 2, 2, 7, 6}
+//        };
 
-        System.out.println(maxSumKnight(knightBoard));
+        int[] palindromeArray = {1,3,2,3,10,10,3,2,4};
+        int[] pal2 = {1,6,3,10,10,1,19};
+
+        System.out.println(longestPalindrome(pal2));
 
     }
 }
