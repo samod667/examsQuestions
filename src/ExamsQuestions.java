@@ -391,6 +391,91 @@ public class ExamsQuestions {
            return equalSum(arr, i + 1, sum + arr[i]);
        }
     }
+///////////////////////////////////////////////////////////////////////////////////////////
+    //Will print to the console the path to a hill in a matrix
+    public static void printPath(int[][] mat){
+        printPath(mat, 0, 1);
+    }
+
+    private static boolean printPath(int[][] mat, int i, int j){
+        if(i == mat.length){
+            return false;
+        }
+
+        if(j == mat[i].length){
+            return printPath(mat, i + 1, 0);
+        }
+
+        if(i == mat.length - 1 && j == mat[i].length){
+            return false;
+        }
+
+        if(isHill(mat, mat[i][j],i ,j)){
+
+
+            String res = "(0,0) ";
+            if(printPath(mat, 0, 0, i, j, res, -1)){
+                System.out.println(res);
+                return true;
+            }
+            return true;
+        }
+
+        return printPath(mat, i, j + 1);
+    }
+
+    private static boolean isHill(int[][] mat, int hillValue, int i, int j){
+        if(i < 0 || j < 0 || i >= mat.length || j >= mat.length){
+            return true;
+        }
+
+        if(mat[i][j] > hillValue){
+            return false;
+        }
+
+        if(mat[i][j] < hillValue){
+            return true;
+        }
+
+        boolean up = isHill(mat, hillValue, i + 1, j);
+        boolean down = isHill(mat, hillValue, i - 1, j);
+        boolean right = isHill(mat, hillValue, i, j + 1);
+        boolean left = isHill(mat, hillValue, i, j - 1);
+
+
+        return up && down && right && left;
+    }
+
+    private static boolean printPath(int[][] mat, int i, int j, int goalI, int goalJ, String res, int preValue){
+        if(i == goalI && j == goalJ){
+//            res += "(" + i + "," + j + ") ";
+            System.out.print("(" + i + "," + j + ") ");
+            return true;
+        }
+
+        if(i < 0 || j < 0 || i >= mat.length || j >= mat.length){
+            return false;
+        }
+
+        if(mat[i][j] <= preValue){
+            return false;
+        }
+
+        if(preValue > mat[i][j]){
+            System.out.print("(" + i + "," + j + ") ");
+//            res += "(" + i + "," + j + ") ";
+        }
+
+        preValue = mat[i][j];
+
+        boolean up = printPath(mat, i + 1, j, goalI, goalJ, res, preValue);
+        boolean down = printPath(mat, i - 1, j, goalI, goalJ, res, preValue);
+        boolean right = printPath(mat, i, j + 1, goalI, goalJ, res, preValue);
+        boolean left = printPath(mat, i, j - 1, goalI, goalJ, res, preValue);
+
+        return up || down || right || left;
+
+    }
 
     public static void main(String[] args) {
 
@@ -439,7 +524,14 @@ public class ExamsQuestions {
 
         int[] arr1 = {2,1,6,5,4};
 
-        System.out.println(equalSum(arr1));
+        int[][] hillMatt = {
+                {3,8,7,1},
+                {5,15,2,4},
+                {12,14,-13,22},
+                {13,16,17,52}
+        };
+
+        printPath(hillMatt);
 
     }
 }
