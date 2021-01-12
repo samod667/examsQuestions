@@ -358,6 +358,40 @@ public class ExamsQuestions {
         return longestPalindrome(a, start + 1, end - 1, count + 2);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///Function that calculates how many negative numbers can be found in a squared matrix --> O(n + m)
+    public static int howManyNegativeNumbers(int[][] mat){      ///2019,83
+       int row = 0, col = mat[row].length - 1, count = 0;
+
+       while(row < mat.length && col >= 0){
+           if(mat[row][col] < 0){
+            count += col + 1;
+            row += 1;
+           } else {
+               col -= 1;
+           }
+       }
+       return count;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //A function that will return the index of the elements of which sum is equal to the following values backwards
+    public static int equalSum(int[] arr){
+        return equalSum(arr, 0, 0);
+    }
+
+    private static int equalSum(int[] arr, int i, int sum){
+       if(i == arr.length){
+           return sum;
+       }
+
+       if(equalSum(arr, i + 1, sum + arr[i]) / 2 == sum){
+           return i - 1;
+       } else {
+           return equalSum(arr, i + 1, sum + arr[i]);
+       }
+    }
+
     public static void main(String[] args) {
 
 //        int[][] matt1 = {
@@ -395,7 +429,17 @@ public class ExamsQuestions {
         int[] palindromeArray = {1,3,2,3,10,10,3,2,4};
         int[] pal2 = {1,6,3,10,10,1,19};
 
-        System.out.println(longestPalindrome(pal2));
+        int[][] negativeMatrix = {
+                {-99,-72,-64,-55,-28,-10,-5},
+                {-72,-53,-46,-38,11,13,12},
+                {-63,-48,-27,-12,14,16,23},
+                {-44,-29,-10,0,18,20,28},
+                {0,12,14,20,28,30,35}
+        };
+
+        int[] arr1 = {2,1,6,5,4};
+
+        System.out.println(equalSum(arr1));
 
     }
 }
