@@ -501,30 +501,74 @@ public class ExamsQuestions {
     ///////////////////////////////////////////////////////////////////////////////////////////
     // Question 1 --> 2020,87
     public static int totalWays(int[][] mat, int k){
-        return totalWays(mat, 0, 0, k, 0);
+        return totalWays(mat, 0, 0, k);
     }
 
-    private static int totalWays(int[][] mat, int i, int j, int k, int count){
+    private static int totalWays(int[][] mat, int i, int j, int k){
         if(i < 0 || j < 0 || i >= mat.length || j >= mat.length){
-            return count;
+            return 0;
         }
 
-        if(i == mat.length - 1 && j == mat[i].length - 1 && count == k){
-            return count;
+        if(i == mat.length - 1 && j == mat[i].length - 1 && k == 0){
+            return 1;
         }
 
+        if(i == mat.length -1 && j == mat[i].length - 1 && k != 0){
+            return 0;
+        }
 
+        if(k == 0 && i != mat.length - 1 && j != mat[i].length - 1){
+            return 0;
+        }
 
-        int down = totalWays(mat, i + 1, j, k, count);
-        int right = totalWays(mat, i, j + 1, k , count);
+        int turn = 0, down = 0, right = 0;
+        if(k > 0){
+            turn = totalWays(mat, i + 1, j + 1, k - 1);
+        } else {
+           down = totalWays(mat, i + 1, j, k);
+           right = totalWays(mat, i, j + 1, k);
+        }
 
-
-        return 0;
+        return turn + down + right;
 
     }
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////
+    ///Count how many time a value is showing up in a sorted array --> O(log n)
+    public static int count(int[] a, int x){
+        int low = 0, high = a.length - 1, mid = 0;
+
+        int indexValue1 = 0, indexValue2 = 0;
+
+        while(low <= high){
+            mid = (low + high) / 2;
+            if(a[mid] > x){
+                high = mid - 1;
+            } else if(a[mid] < x){
+                low = mid + 1;
+            } else {
+                indexValue1 = mid;
+                low = mid + 1;
+            }
+        }
+
+        low = 0; high = a.length - 1;
+        while(low <= high){
+            mid = (low + high) / 2;
+
+            if(a[mid] > x){
+                high = mid -1;
+            } else if(a[mid] < x){
+                low = mid + 1;
+            } else {
+                indexValue2 = mid;
+                high = mid -1;
+            }
+        }
+
+        return indexValue1 - indexValue2 + 1;
+    }
+
 
 
     public static void main(String[] args) {
@@ -591,8 +635,16 @@ public class ExamsQuestions {
                 {1,1,-1,-1,1}
         };
 
+        int[][] mat4 = {
+                {1,2,3},
+                {4,5,6},
+                {7,8,9}
+        };
+
         int[] arr2 = {1,2,4,4, 5, 6};
-        System.out.println(strictlyIncreasing(arr2));
+        int[] arr3 = {-5,-5,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,67,67,99};
+
+        System.out.println(count(arr3, -5));
 
     }
 }
