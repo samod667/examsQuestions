@@ -375,7 +375,7 @@ public class ExamsQuestions {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
-    //A function that will return the index of the elements of which sum is equal to the following values backwards
+    //A function that will return the index of the elements of which sum is equal to the following values backwards ---> 2007
     public static int equalSum(int[] arr){
         return equalSum(arr, 0, 0);
     }
@@ -392,90 +392,140 @@ public class ExamsQuestions {
        }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////
-    //Will print to the console the path to a hill in a matrix
+    //Will print to the console the path to a hill in a matrix ----> 2014
     public static void printPath(int[][] mat){
-        printPath(mat, 0, 1);
+        printPath(mat, 0, 0);
+    }
+    private static void printPath(int[][] mat, int i , int j){
+        int value = mat[i][j];
+        int width = mat[0].length;
+        int height = mat.length;
+
+        System.out.print("(" + i + "," + j + ") ");
+
+        if(i < width - 1 && mat[i + 1][j] > value){
+            printPath(mat, i + 1, j);
+        }
+        else if(i > 0 && mat[i - 1][j] > value){
+            printPath(mat, i - 1, j);
+        }
+        else if(j < width - 1 && mat[i][j + 1] > value){
+            printPath(mat,i ,j + 1);
+        }
+        else if(j > 0 && mat[i][j - 1] > value){
+            printPath(mat, i, j - 1);
+        } else {
+            return;
+        }
+
     }
 
-    private static boolean printPath(int[][] mat, int i, int j){
-        if(i == mat.length){
-            return false;
-        }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///Find the maximum value in an array ---> 2014
+    public static int findMax(int[] arr){
+        int low = 0, high = arr.length - 1, mid = 0;
 
-        if(j == mat[i].length){
-            return printPath(mat, i + 1, 0);
-        }
+        while(low <= high){
+            mid = (low + high) / 2;
 
-        if(i == mat.length - 1 && j == mat[i].length){
-            return false;
-        }
-
-        if(isHill(mat, mat[i][j],i ,j)){
-
-
-            String res = "(0,0) ";
-            if(printPath(mat, 0, 0, i, j, res, -1)){
-                System.out.println(res);
-                return true;
+            if(arr[mid] > arr[low] && arr[mid] < arr[high]){
+                return high;
             }
-            return true;
-        }
 
-        return printPath(mat, i, j + 1);
+            if(high == low){
+                return high;
+            }
+
+            if(arr[mid] < arr[low]){
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
     }
 
-    private static boolean isHill(int[][] mat, int hillValue, int i, int j){
+    ///////////////////////////////////////////////////////////////////////////////////////////
+     //Find Maximum length of matrix where you can go only through 1s and 0s  ---> 2020,85
+    public static int findMaximum(int[][] mat) {
+        if(mat[0][0] == -1){
+            return -1;
+        }
+        return findMaximum(mat, 0, 0);
+    }
+
+    private static int findMaximum(int[][] mat, int i, int j){
+        if(i < 0 || j < 0 || i >= mat.length || j >= mat[i].length || mat[i][j] == -1){
+            return 0;
+        }
+
+        if (i % 2 == 0){
+            int val = mat[i][j];
+
+            mat[i][j] = -1;
+
+            int right =  val + findMaximum(mat, i, j + 1);
+            int down = val + findMaximum(mat, i + 1, j);
+
+            mat[i][j] = val;
+
+            return Math.max(right,down);
+        }else {
+            int val = mat[i][j];
+
+            mat[i][j] = -1;
+
+            int left = val + findMaximum(mat, i, j - 1);
+            int down = val + findMaximum(mat, i + 1, j);
+
+            mat[i][j] = val;
+
+            return Math.max(left,down);
+        }
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    //Get the number of sub array which are increasing in an array --> 2020,85
+    public static int strictlyIncreasing(int[] a){
+        int count = 0, ptr = 0;
+
+        for (int i = 1; i < a.length; i++) {
+           if(a[i] > a[i - 1]){
+               count = count + (i - ptr);
+           } else {
+               ptr = i;
+           }
+        }
+        return count;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    // Question 1 --> 2020,87
+    public static int totalWays(int[][] mat, int k){
+        return totalWays(mat, 0, 0, k, 0);
+    }
+
+    private static int totalWays(int[][] mat, int i, int j, int k, int count){
         if(i < 0 || j < 0 || i >= mat.length || j >= mat.length){
-            return true;
+            return count;
         }
 
-        if(mat[i][j] > hillValue){
-            return false;
+        if(i == mat.length - 1 && j == mat[i].length - 1 && count == k){
+            return count;
         }
 
-        if(mat[i][j] < hillValue){
-            return true;
-        }
-
-        boolean up = isHill(mat, hillValue, i + 1, j);
-        boolean down = isHill(mat, hillValue, i - 1, j);
-        boolean right = isHill(mat, hillValue, i, j + 1);
-        boolean left = isHill(mat, hillValue, i, j - 1);
 
 
-        return up && down && right && left;
+        int down = totalWays(mat, i + 1, j, k, count);
+        int right = totalWays(mat, i, j + 1, k , count);
+
+
+        return 0;
+
     }
 
-    private static boolean printPath(int[][] mat, int i, int j, int goalI, int goalJ, String res, int preValue){
-        if(i == goalI && j == goalJ){
-//            res += "(" + i + "," + j + ") ";
-            System.out.print("(" + i + "," + j + ") ");
-            return true;
-        }
 
-        if(i < 0 || j < 0 || i >= mat.length || j >= mat.length){
-            return false;
-        }
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
-        if(mat[i][j] <= preValue){
-            return false;
-        }
-
-        if(preValue > mat[i][j]){
-            System.out.print("(" + i + "," + j + ") ");
-//            res += "(" + i + "," + j + ") ";
-        }
-
-        preValue = mat[i][j];
-
-        boolean up = printPath(mat, i + 1, j, goalI, goalJ, res, preValue);
-        boolean down = printPath(mat, i - 1, j, goalI, goalJ, res, preValue);
-        boolean right = printPath(mat, i, j + 1, goalI, goalJ, res, preValue);
-        boolean left = printPath(mat, i, j - 1, goalI, goalJ, res, preValue);
-
-        return up || down || right || left;
-
-    }
 
     public static void main(String[] args) {
 
@@ -531,7 +581,18 @@ public class ExamsQuestions {
                 {13,16,17,52}
         };
 
-        printPath(hillMatt);
+        int[] arr = {6,70,75,90,150,200,48,49,52};
+
+        int[][] matt3 = {
+                {1,1,-1,1,1},
+                {1,0,0,-1,1},
+                {1,1,1,1,-1},
+                {-1,-1,1,1,1},
+                {1,1,-1,-1,1}
+        };
+
+        int[] arr2 = {1,2,4,4, 5, 6};
+        System.out.println(strictlyIncreasing(arr2));
 
     }
 }
