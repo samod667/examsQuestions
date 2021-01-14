@@ -501,10 +501,10 @@ public class ExamsQuestions {
     ///////////////////////////////////////////////////////////////////////////////////////////
     // Question 1 --> 2020,87
     public static int totalWays(int[][] mat, int k){
-        return totalWays(mat, 0, 0, k);
+        return totalWays(mat, 0, 0, k, 0, 0);
     }
 
-    private static int totalWays(int[][] mat, int i, int j, int k){
+    private static int totalWays(int[][] mat, int i, int j, int k, int prevRowIndex, int preColIndex){
         if(i < 0 || j < 0 || i >= mat.length || j >= mat.length){
             return 0;
         }
@@ -517,20 +517,25 @@ public class ExamsQuestions {
             return 0;
         }
 
-        if(k == 0 && i != mat.length - 1 && j != mat[i].length - 1){
-            return 0;
-        }
+        int down = 0, right = 0;
 
-        int turn = 0, down = 0, right = 0;
-        if(k > 0){
-            turn = totalWays(mat, i + 1, j + 1, k - 1);
+        if(i > prevRowIndex && j == preColIndex){
+            prevRowIndex = i;
+            preColIndex = j;
+            right = totalWays(mat, i, j + 1, k - 1, prevRowIndex, preColIndex);
+            down = totalWays(mat, i + 1, j, k, prevRowIndex, preColIndex);
+        } else if(i == prevRowIndex && j > preColIndex){
+            prevRowIndex = i;
+            preColIndex = j;
+            right = totalWays(mat, i, j + 1, k, prevRowIndex, preColIndex);
+            down = totalWays(mat, i + 1, j, k - 1, prevRowIndex, preColIndex);
         } else {
-           down = totalWays(mat, i + 1, j, k);
-           right = totalWays(mat, i, j + 1, k);
+            prevRowIndex = i;
+            preColIndex = j;
+            right = totalWays(mat, i, j + 1, k, prevRowIndex, preColIndex);
+            down = totalWays(mat, i + 1, j, k, prevRowIndex, preColIndex);
         }
-
-        return turn + down + right;
-
+        return down + right;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -540,7 +545,7 @@ public class ExamsQuestions {
 
         int indexValue1 = 0, indexValue2 = 0;
 
-        while(low <= high){
+        while(low <= high){     //get the rightest index of x in the array
             mid = (low + high) / 2;
             if(a[mid] > x){
                 high = mid - 1;
@@ -553,7 +558,7 @@ public class ExamsQuestions {
         }
 
         low = 0; high = a.length - 1;
-        while(low <= high){
+        while(low <= high){        //fet the leftest index of x in the array
             mid = (low + high) / 2;
 
             if(a[mid] > x){
@@ -566,10 +571,57 @@ public class ExamsQuestions {
             }
         }
 
-        return indexValue1 - indexValue2 + 1;
+        return indexValue1 - indexValue2 + 1;   //subtract both indexes + 1 to get the result
     }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+    //Find the length in array from the nearest zero and change the array accordingly --> O(n)
+    public static void zeroDistance(int[] a){
+        int zeroIndex = 0;
 
+        for (int i = a.length - 1; i >= 0 ; i--) {
+            if(a[i] == 0){
+                zeroIndex = i;
+            } else {
+                a[i] = Math.abs(i - zeroIndex);
+            }
+        }
+
+        zeroIndex = 0;
+        for (int i = 0; i < a.length; i++) {
+            if(a[i] == 0){
+                zeroIndex = i;
+            } else {
+                if(a[i] > Math.abs(zeroIndex - i)){
+                    a[i] = Math.abs(zeroIndex - i);
+                }
+            }
+        }
+    }
+
+    private static void printArray(int[] a){
+        for (int j : a) {
+            System.out.print(j + " ");
+        }
+        System.out.println();
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    //Find the maximal drop value between to values in the array --> 2010,82
+    public static int maximalDrop(int[] a){ // O(n)
+        int hillIndex = 0, maxDrop = 0;
+
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] > a[hillIndex]) {
+                hillIndex = i;
+            } else {
+                if (a[hillIndex] - a[i] > maxDrop) {
+                    maxDrop = a[hillIndex] - a[i];
+                }
+            }
+        }
+        return maxDrop;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
 
@@ -643,8 +695,12 @@ public class ExamsQuestions {
 
         int[] arr2 = {1,2,4,4, 5, 6};
         int[] arr3 = {-5,-5,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,67,67,99};
+        int[] arr4 = {0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1};
+        int[] arr5 = {5,21,3,27,12,24,7,6,4};
+        int[] arr6 = {5,21,3,22,12,7,26,14};
+        int[] arr7 = {5,15,3,22,7,27,14};
 
-        System.out.println(count(arr3, -5));
+        System.out.println(totalWays(mat4, 1));
 
     }
 }
