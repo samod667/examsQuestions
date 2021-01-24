@@ -26,7 +26,7 @@ public class ExamsQuestions {
             temp1 = isSum(a, num - a[i], i, i + 2);
         } else {
             temp2 = isSum(a, num - a[i], i, i + 1);
-            temp3 = isSum(a, num, pre, i + 1);
+            temp3 = isSum(a, num - a[pre], pre, i + 1);
         }
 
         return temp1 || temp2 || temp3;
@@ -504,7 +504,7 @@ public class ExamsQuestions {
         return totalWays(mat, 0, 0, k, 0, 0);
     }
 
-    private static int totalWays(int[][] mat, int i, int j, int k, int prevRowIndex, int preColIndex){
+    private static int totalWays(int[][] mat, int i, int j, int k, int prevI, int prevJ){
         if(i < 0 || j < 0 || i >= mat.length || j >= mat.length){
             return 0;
         }
@@ -517,25 +517,16 @@ public class ExamsQuestions {
             return 0;
         }
 
-        int down = 0, right = 0;
+        if(i > prevI && j == prevJ){
+            return totalWays(mat, i, j + 1, k - 1, i, j) + totalWays(mat, i + 1, j, k, i, j);
 
-        if(i > prevRowIndex && j == preColIndex){
-            prevRowIndex = i;
-            preColIndex = j;
-            right = totalWays(mat, i, j + 1, k - 1, prevRowIndex, preColIndex);
-            down = totalWays(mat, i + 1, j, k, prevRowIndex, preColIndex);
-        } else if(i == prevRowIndex && j > preColIndex){
-            prevRowIndex = i;
-            preColIndex = j;
-            right = totalWays(mat, i, j + 1, k, prevRowIndex, preColIndex);
-            down = totalWays(mat, i + 1, j, k - 1, prevRowIndex, preColIndex);
-        } else {
-            prevRowIndex = i;
-            preColIndex = j;
-            right = totalWays(mat, i, j + 1, k, prevRowIndex, preColIndex);
-            down = totalWays(mat, i + 1, j, k, prevRowIndex, preColIndex);
+        } else if(i == prevI && j > prevJ){
+            return totalWays(mat, i + 1, j, k - 1, i, j) + totalWays(mat, i, j + 1, k, i, j);
+
         }
-        return down + right;
+
+        return totalWays(mat, i, j + 1, k, i, j) + totalWays(mat, i + 1, j, k, i, j);
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -622,6 +613,485 @@ public class ExamsQuestions {
         return maxDrop;
     }
 ///////////////////////////////////////////////////////////////////////////////////////////
+    //Prints all the triplets which the sum of their multiplication is equal to num --> 2020,87
+    public static void printTriplets(int[] a, int num){         /// --> O(n)
+        for (int i = 0; i < a.length; i++) {
+            int mid = i + 1;
+            int high = a.length - 1;
+
+            while(mid < high){
+                int multiResult = a[i] * a[mid] * a[high];
+                if(multiResult == num){
+                    System.out.println(a[i] + " " + a[mid] + " " + a[high] + " ");
+                }
+                if(multiResult < num){
+                    mid = mid + 1;
+                } else {
+                    high = high - 1;
+                }
+            }
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //Prints a special string without the char 'a' --> 2016,A
+    public static void specialPrint(String s){
+        if(s.length() == 0){
+            return;
+        }
+        if(s.charAt(0) == 'a'){
+            System.out.println(s);
+        }
+        specialPrint(s.substring(1));
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    //Find word in a word game --> 2020,84
+//    public static void findWord(char[][] arr, String word){
+//        int[][] copyArray = new int[arr.length][arr.length];
+//
+//        findWord(arr, copyArray, word, 0, 0, 1);
+//
+//        if(allZero(copyArray, 0, 0)){
+//            System.out.println("No Such Word");
+//        } else {
+//            printArray(copyArray);
+//        }
+//    }
+//
+//    private static void findWord(char[][] arr, int[][] mat, String word, int i, int j, int count){
+//        if(!isValid(mat, i, j) || mat[i][j] == 0){
+//            return;
+//        }
+//
+//        if(arr[i][j] == word.charAt(0)){
+//            findWord(arr, mat, word, i, j, count);  //Search for word
+//        }
+//
+//        mat[i][j] = 0;
+//
+//
+//        findWord(arr, mat, word, i + 1, j, count);
+//        findWord(arr, mat, word, i, j + 1, count);
+//    }
+//
+   private static boolean isValid(int[][] mat, int i, int j){
+        return i >= 0 && j >= 0 && i < mat.length && j < mat[i].length;
+   }
+
+   private static void zeroMat(int[][] mat, int i, int j){
+        if(!isValid(mat, i, j)){
+            return;
+        }
+
+        mat[i][j] = 0;
+
+        zeroMat(mat, i + 1, j);
+        zeroMat(mat, i , j + 1);
+   }
+
+   private static boolean allZero(int[][] mat, int i, int j){
+        if(j == mat[i].length - 1 && i < mat.length - 1){
+            return allZero(mat, i + 1, 0);
+        }
+
+        if(j == mat[i].length - 1 && i == mat.length - 1){
+            return true;
+        }
+
+        if(mat[i][j] != 0){
+            return false;
+        }
+
+        return allZero(mat, i, j + 1);
+    }
+
+//    private static void findWord(char[][] arr, int[][] copyArray, String word, int i, int j){
+//
+//    }
+
+    public static void printArray(int[][] arr){
+        for (int[] ints : arr) {
+            for (int anInt : ints) {
+                System.out.print(anInt + "  ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void printArray(char[][] arr){
+        for (char[] chars : arr) {
+            for (char aChar : chars) {
+                System.out.print(aChar + "  ");
+            }
+            System.out.println();
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //Comparing between two words and checking which one is the bigger in a dictionary order --> 2006, 5
+
+    public static int myCompare(String s1, String s2){
+        if(s1.length() > 0 && s2.length() == 0){
+            return 1;
+        }
+
+        if(s2.length() > 0 && s1.length() == 0){
+            return -1;
+        }
+
+        if(s1.length() == 0){
+            return 0;
+        }
+
+        if(s1.charAt(0) > s2.charAt(0)){
+            return 1;
+        }
+
+        if(s1.charAt(0) < s2.charAt(0)){
+            return -1;
+        }
+
+        return myCompare(s1.substring(1), s2.substring(1));
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //Returns true if two int arrays have the same values - not necessarily in the same order
+    public static boolean isPermutation(int[] a, int[] b){
+        if(a.length != b.length){
+            return false;
+        }
+
+        bubble(a, 0);
+        bubble(b, 0);
+
+        return isPermutation(a, b, 0, 0);
+    }
+
+    public static boolean isPermutation(int[] a, int[] b, int i, int j){
+        if(i == a.length && j == b.length){
+            return true;
+        }
+
+        if(a[i] != a[j]){
+            return false;
+        }
+
+        return isPermutation(a, b, i + 1, j + 1);
+    }
+
+    private static void bubble(int[] a, int i){
+        int temp = 0;
+        if(sorted(a, 0)){
+            return;
+        }
+
+        if(i < a.length - 1){
+            if(a[i] > a[i + 1]){
+                temp = a[i];
+                a[i] = a[i + 1];
+                a[i + 1] = temp;
+            }
+        }
+
+        if(i == a.length){
+            bubble(a, 0);
+        }
+        bubble(a, i + 1);
+    }
+
+    private static boolean sorted(int[] a, int i){
+        if (i == a.length - 1){
+            return true;
+        }
+
+        if(a[i] > a[i + 1]){
+            return false;
+        }
+
+        return sorted(a, i + 1);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //Check what is the minimal combination you can reach num with addition of 1 5 and 7
+    public static int oneFiveSeven(int n){
+        return oneFiveSeven(n, 0);
+    }
+
+    private static int oneFiveSeven(int n, int count){
+        if(n == 0){
+            return count;
+        }
+
+        if(n < 0){
+            return Integer.MAX_VALUE;
+        }
+
+        int one = oneFiveSeven(n - 1, count + 1);
+        int five = oneFiveSeven(n - 5, count + 1);
+        int seven = oneFiveSeven(n - 7, count + 1);
+
+//        if(one < five && one < seven){
+//            return one;
+//        } else if(one > five && five < seven){
+//            return five;
+//        } else {
+//            return seven;
+//        }
+        return minValue(one, five, seven);
+//        return Math.min(Math.min(one, five), seven);
+    }
+
+    private static int minValue(int a, int b, int c){
+        if(a <= b && a <= c){
+            return a;
+        } else if(b <= a && b <= c){
+            return b;
+        } else {
+            return c;
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///How many ropes in a matrix -->2015,a
+    public static int countRopes(int[][] mat){
+        return countRopes(mat, 0);
+    }
+
+    private static int countRopes(int[][] mat, int j){
+        if(j == mat.length){
+            return 0;
+        }
+
+        int count = countRopes(mat, 0, j, Integer.MAX_VALUE);
+
+        return countRopes(mat, j + 1) + count;
+    }
+
+    private static int countRopes(int[][] mat, int i, int j, int prevValue){
+        if(i >= mat.length || i < 0 || j < 0 || j >= mat[i].length){
+            return 0;
+        }
+
+        if(mat[i][j] >= prevValue){
+            return 0;
+        }
+
+        if(i == mat.length - 1 && mat[i][j] < prevValue){
+            return 1;
+        }
+
+        int temp = mat[i][j];
+
+
+        int down = countRopes(mat, i + 1, j, temp);
+        int downLeft = countRopes(mat, i + 1, j - 1, temp);
+        int downRight = countRopes(mat, i + 1, j + 1, temp);
+
+        mat[i][j] = temp;
+
+        return down + downLeft + downRight;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //How many couples in the array have the distance k o(n)
+    public static void printPairs(int[] a, int k){
+        int high = 1, low = 0;
+
+        while(high < a.length){
+            int distance = a[high] - a[low];
+
+            if(distance < k){
+                high++;
+            } else if(distance == k){
+                System.out.println("Pair Found: " + a[low] + " ," + a[high]);
+                low++;
+                high++;
+            } else {
+                low++;
+            }
+        }
+
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    ///2015,a
+    public static boolean splitTo3(int[] arr){
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+
+        int left = 0, right = arr.length -1;
+
+        while(left < right){
+            if(sum == 0){
+                return true;
+            }
+
+            if(sum < 0){
+                sum -= arr[left];
+                left ++;
+            }
+
+            if(sum > 0){
+                sum-= arr[right];
+                right--;
+            }
+        }
+        return false;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean isSum2(int[] arr, int num){
+        return isSum2(arr, num, 0, 0);
+    }
+
+    private static boolean isSum2(int[] arr, int num, int i, int count){
+        if(i == arr.length && num != 0){
+            return false;
+        }
+
+        if(num == 0 && count < 3){
+            return true;
+        }
+
+        if(count == 3 || num < 0){
+            return false;
+        }
+
+        return isSum2(arr, num - arr[i], i + 1, count + 1) || isSum2(arr, num, i + 1, 0);
+
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    //Return the smallest sub array which sum is greater than k
+    public static int smallestSub(int[] a, int k){
+        int currentSum = 0, left = 0, minIndex = Integer.MAX_VALUE;
+
+        for (int right = 0; right < a.length; right++) {
+
+            currentSum += a[right];
+
+            while(currentSum > k && left <= right){
+                minIndex = Math.min(minIndex, right -  left + 1);
+                currentSum -= a[left++];
+            }
+
+        }
+
+        if(minIndex == Integer.MAX_VALUE){
+            return a.length + 1;
+        } else {
+            return minIndex;
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //Prince 2018
+    public static int prince(int[][] drm, int i, int j){
+        int findThePrince = prince(drm, i, j , drm[i][j], 1);
+
+        if(findThePrince == Integer.MAX_VALUE){
+            return -1;
+        } else {
+            return findThePrince;
+        }
+    }
+
+    private static int prince(int[][] drm, int i, int j, int preValue, int count){
+        if(!isValid2(drm,i,j) || drm[i][j] == -2){       //Check if step is within the matrix and was not visited before
+            return Integer.MAX_VALUE;
+        }
+
+        if(drm[i][j] == - 1){       //If step is equal to -1 we found the villain
+            return count;
+        }
+
+        int climb = Math.abs(drm[i][j] - preValue);
+        int jump = drm[i][j] - preValue;
+
+        if(climb > 2 || jump > 1){
+            return Integer.MAX_VALUE;
+        }
+
+        int temp = drm[i][j];
+        drm[i][j] = -2;
+
+        //Recursive call for all directions
+        int north = prince(drm, i - 1, j, temp, count + 1);
+        int south = prince(drm, i + 1, j, temp, count + 1);
+        int east = prince(drm, i , j + 1, temp, count + 1);
+        int west = prince(drm, i, j - 1, temp, count + 1);
+
+        drm[i][j] = temp;
+
+        int min = Math.min(Math.min(north, south), Math.min(east, west));
+
+        return min;
+    }
+
+    private static boolean isValid2(int[][] mat, int i, int j){
+        return i >= 0 && j >= 0 && i < mat.length && j < mat[i].length;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    public static void findWord(char[][] arr, String word){
+        int[][] mat = new int[arr.length][arr.length];
+
+        findWord(arr, mat, word, 0, 0);
+
+        if(allZero(mat, 0, 0)){
+            System.out.println("No Such Word");
+        } else {
+            printArray(mat);
+        }
+    }
+
+    private static void findWord(char[][] arr, int[][] mat, String word, int i, int j){
+        if(!isValid(mat, i, j)){
+            return;
+        }
+
+        boolean wasFound = false;
+        if(arr[i][j] == word.charAt(0)){
+           wasFound = searchWord(arr, mat, word, i, j, 0);
+        }
+
+        if(wasFound){
+            return;
+        } else {
+            findWord(arr, mat, word, i , j + 1);
+            findWord(arr,mat,word,i + 1, j);
+        }
+    }
+
+    private static boolean searchWord(char[][] arr, int[][] mat, String word, int i, int j, int k){
+        if(i < 0 || j < 0 || i >= arr.length || j >= arr.length || arr[i][j] == 'X' || k >= word.length()){
+            return false;
+        }
+
+        if(word.charAt(k) != arr[i][j]){
+          return false;
+        }
+
+        if(k == word.length() - 1 && word.charAt(k) == arr[i][j]){
+            mat[i][j] = k + 1;
+            return true;
+        }
+
+
+        char temp = arr[i][j];
+        arr[i][j] = 'X';
+
+        mat[i][j] = k + 1;
+
+       boolean up = searchWord(arr, mat, word, i - 1, j, k + 1);
+       boolean down = searchWord(arr, mat, word, i + 1, j, k + 1);
+       boolean right = searchWord(arr, mat, word, i, j + 1, k + 1);
+       boolean left = searchWord(arr, mat, word, i, j - 1, k + 1);
+
+        arr[i][j] = temp;
+
+
+        if(up|| down || right || left){
+            return true;
+        } else {
+            mat[i][j] = 0;
+            return false;
+        }
+    }
+
+
 
     public static void main(String[] args) {
 
@@ -699,8 +1169,51 @@ public class ExamsQuestions {
         int[] arr5 = {5,21,3,27,12,24,7,6,4};
         int[] arr6 = {5,21,3,22,12,7,26,14};
         int[] arr7 = {5,15,3,22,7,27,14};
+        int[] arr8 = {1,2,3,4,5,6,7,8,9};
 
-        System.out.println(totalWays(mat4, 1));
+        String s = "Java is a good language!";
 
+        char[][] wordGame = {
+                {'t','z','x','c','d'},
+                {'s','h','a','z','x'},
+                {'h','w','l','o','m'},
+                {'o','r','n','t','m'},
+                {'s','h','a','l','o'},
+        };
+        char[][] wordGame2 = {
+                {'t', 'z', 'x', 'c', 'd'},
+                {'o', 'r', 'n', 't', 'n'},
+                {'s', 'p', 'a', 'z', 'x'},
+                {'m', 'o', 'l', 'a', 'h'},
+                {'a', 'b', 'r', 'i', 's'},
+        };
+        int[] isSum = {4,2,3,1};
+
+        int[][] mat5 = {
+                {0,0,0,10,0,0},
+                {100,100,8,100,9,100},
+                {100,6,100,100,100,7},
+                {3,100,4,100,100,5},
+                {1,2,100,100,100,2}
+        };
+
+        int[] arr10 = {-7,-3,0,1,3,5,12,14,17,19,25,30};
+        int[] arr11 = {-8,-7,-5,-3,-2,1,-1};
+        int[] arr12 = {5,4,2,1,3};
+
+        findWord(wordGame, "shalom");
+//        int[] arr9 = {9,4,1,5};
+//        int[] arr10 = {5,4,9,1};
+        int[] arr13 = {1,4,13,6,0,19};
+
+        int[][] princeMat = {
+                {2,0,1,2,3},
+                {2,3,5,5,4},
+                {2,5,6,8,7},
+                {2,4,7,2,4},
+                {-1,4,3,1,2}
+        };
+
+//        System.out.println(prince(princeMat, 0, 0));
     }
 }
