@@ -1025,6 +1025,7 @@ public class ExamsQuestions {
         return i >= 0 && j >= 0 && i < mat.length && j < mat[i].length;
     }
 ///////////////////////////////////////////////////////////////////////////////////////////
+    //Search word in a word game -          2018,85
     public static void findWord(char[][] arr, String word){
         int[][] mat = new int[arr.length][arr.length];
 
@@ -1090,7 +1091,124 @@ public class ExamsQuestions {
             return false;
         }
     }
+///////////////////////////////////////////////////////////////////////////////////////////
+    ///Longest slope        2018,85
+    public static int longestSlope(int[][] mat, int num){
+        return longestSlope(mat, num, 0, 0);
+    }
 
+    private static int longestSlope(int[][] mat, int num, int i, int j){
+        if(i >= mat.length){
+            return 0;
+        }
+
+        if(j >= mat[i].length){
+            return longestSlope(mat, num, i + 1, 0);
+        }
+
+        int slopeLength = longestSlope(mat, num, i, j, mat[i][j] + num, 0);
+
+        return Math.max(slopeLength, longestSlope(mat, num, i, j + 1));
+    }
+
+    private static int longestSlope(int[][] mat, int num, int i, int j, int preValue, int count){
+        if(i < 0 || j < 0 || i >= mat.length || j >= mat.length || mat[i][j] == -1){
+            return count;
+        }
+
+        if(mat[i][j] != preValue - num){
+            return count;
+        }
+
+        int temp = mat[i][j];
+        mat[i][j] = -1;
+        count += 1;
+        int up = longestSlope(mat, num, i - 1, j, temp, count);
+        int down = longestSlope(mat, num, i + 1, j, temp, count);
+        int right = longestSlope(mat, num, i, j + 1, temp, count);
+        int left = longestSlope(mat, num, i, j - 1, temp, count);
+
+        mat[i][j] = temp;
+
+        int max = Math.max(Math.max(up, down), Math.max(right, left));
+
+       return max;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    //2020, 81
+    public static int makeSum(int[] lengths, int k, int num){
+        return makeSum(lengths, k, num, 0);
+    }
+
+    private static int makeSum(int[] arr, int k, int num, int i){
+        if(i == arr.length || num < 0 || k < 0){
+            return 0;
+        }
+
+        if(k == 0){
+            return 1;
+        }
+
+        return makeSum(arr, k - arr[i], num - 1, i) + makeSum(arr, k, num, i + 1);
+
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //2020, 81
+    public static void minimumSubK(int[] arr, int k){
+        int minSum = 0, left = 0, right = 0, currentSum = 0, leftIndex = 0, rightIndex = 0;
+
+        while(right < arr.length - 1){
+            while(right < k - 1){
+                minSum += arr[right];
+                currentSum = minSum;
+                right++;
+            }
+
+            if(currentSum < minSum){
+                minSum = currentSum;
+
+                leftIndex = left;
+                rightIndex = right;
+            }
+            currentSum += arr[right + 1];
+            currentSum -= arr[left];
+
+            right++;
+            left++;
+        }
+
+        System.out.println("Minimum sub-array is: (" + leftIndex + "," + rightIndex + ")");
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    //2019, 84
+    public static boolean sumPower3(int num){
+       return sumPower3(num, 0);
+    }
+
+    private static boolean sumPower3(int num, int power){
+
+        int value = num - pow(3, power);
+
+
+        if(value == 0){
+            return true;
+        }
+
+        if(value < 0){
+            return false;
+        }
+
+        return sumPower3(num - pow(3, power), power + 1) || sumPower3(num, power + 1);
+    }
+
+    private static int pow(int a, int b){
+        if(b == 0){
+            return 1;
+        }
+
+        return a * pow(a, b - 1);
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
 
 
     public static void main(String[] args) {
@@ -1201,7 +1319,7 @@ public class ExamsQuestions {
         int[] arr11 = {-8,-7,-5,-3,-2,1,-1};
         int[] arr12 = {5,4,2,1,3};
 
-        findWord(wordGame, "shalom");
+//        findWord(wordGame, "shalom");
 //        int[] arr9 = {9,4,1,5};
 //        int[] arr10 = {5,4,9,1};
         int[] arr13 = {1,4,13,6,0,19};
@@ -1214,6 +1332,21 @@ public class ExamsQuestions {
                 {-1,4,3,1,2}
         };
 
-//        System.out.println(prince(princeMat, 0, 0));
+        int[][] slopeMat = {
+                {3,13,15,28,30},
+                {55,54,53,27,26},
+                {54,12,52,51,50},
+                {50,10,8,53,11}
+        };
+
+        int[] checkSum = {2, 5, 10, 20, 50};
+
+//        System.out.println(longestSlope(slopeMat, 50));
+
+        int[] minSubArray = {10, 4, 2 ,5, 6, 3, 8, 1, 5, 9};
+
+//        minimumSubK(minSubArray, 2);
+
+
     }
 }
