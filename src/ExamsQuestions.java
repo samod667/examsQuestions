@@ -140,7 +140,7 @@ public class ExamsQuestions {
     public static int arithmeticMissingValue(int[] arr) {
         int arrLength = arr.length;
 
-        int diff = (arr[arrLength - 1] - arr[0]) / arrLength;
+        int diff = (arr[arrLength - 1] - arr[0]) / arrLength; //Arithmetic difference
 
         int low = 0, high = arrLength - 1;
 
@@ -153,21 +153,20 @@ public class ExamsQuestions {
         while (low <= high) {
             mid = (low + high) / 2;
 
-            if (arr[mid + 1] - arr[mid] != diff) {
+            if (arr[mid + 1] - arr[mid] != diff) {  //Found the missing value
                 return arr[mid] + diff;
             }
 
-            if (mid > 0 && arr[mid] - arr[mid - 1] != diff) {
+            if (mid > 0 && arr[mid] - arr[mid - 1] != diff) {  //Found the missing value
                 return arr[mid] - diff;
             }
 
-            if (arr[mid] == arr[0] + mid * diff) {
+            if (arr[mid] == arr[0] + mid * diff) {  //Check where missing value is found
                 low = mid + 1;
             } else {
                 high = mid - 1;
             }
         }
-
 
         return Integer.MIN_VALUE;
     }
@@ -643,49 +642,9 @@ public class ExamsQuestions {
         }
         specialPrint(s.substring(1));
     }
-///////////////////////////////////////////////////////////////////////////////////////////
-    //Find word in a word game --> 2020,84
-//    public static void findWord(char[][] arr, String word){
-//        int[][] copyArray = new int[arr.length][arr.length];
-//
-//        findWord(arr, copyArray, word, 0, 0, 1);
-//
-//        if(allZero(copyArray, 0, 0)){
-//            System.out.println("No Such Word");
-//        } else {
-//            printArray(copyArray);
-//        }
-//    }
-//
-//    private static void findWord(char[][] arr, int[][] mat, String word, int i, int j, int count){
-//        if(!isValid(mat, i, j) || mat[i][j] == 0){
-//            return;
-//        }
-//
-//        if(arr[i][j] == word.charAt(0)){
-//            findWord(arr, mat, word, i, j, count);  //Search for word
-//        }
-//
-//        mat[i][j] = 0;
-//
-//
-//        findWord(arr, mat, word, i + 1, j, count);
-//        findWord(arr, mat, word, i, j + 1, count);
-//    }
-//
+
    private static boolean isValid(int[][] mat, int i, int j){
         return i >= 0 && j >= 0 && i < mat.length && j < mat[i].length;
-   }
-
-   private static void zeroMat(int[][] mat, int i, int j){
-        if(!isValid(mat, i, j)){
-            return;
-        }
-
-        mat[i][j] = 0;
-
-        zeroMat(mat, i + 1, j);
-        zeroMat(mat, i , j + 1);
    }
 
    private static boolean allZero(int[][] mat, int i, int j){
@@ -703,10 +662,6 @@ public class ExamsQuestions {
 
         return allZero(mat, i, j + 1);
     }
-
-//    private static void findWord(char[][] arr, int[][] copyArray, String word, int i, int j){
-//
-//    }
 
     public static void printArray(int[][] arr){
         for (int[] ints : arr) {
@@ -807,6 +762,46 @@ public class ExamsQuestions {
 
         return sorted(a, i + 1);
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean isPermutation2(int[] a, int[] b){
+        if(a.length != b.length){
+            return false;
+        } else {
+            return isPermutation2(a, b, 0);
+        }
+    }
+
+    private static boolean isPermutation2(int[] a, int[] b, int i){
+        if(i == a.length){
+            return true;
+        }
+
+        boolean checkValue = checkVal(b, a[i], 0);
+
+        if(!checkValue){
+            return false;
+        }
+
+        return isPermutation2(a, b, i + 1);
+    }
+
+    private static boolean checkVal(int[] b, int value, int i){
+        if(i == b.length){
+            return false;
+        }
+
+        if(b[i] == -1){
+            return checkVal(b, value, i + 1);
+        }
+
+        if(b[i] == value){
+            b[i] = -1;
+            return true;
+        }
+
+        return checkVal(b, value, i + 1);
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////
     //Check what is the minimal combination you can reach num with addition of 1 5 and 7
     public static int oneFiveSeven(int n){
@@ -1209,7 +1204,208 @@ public class ExamsQuestions {
         return a * pow(a, b - 1);
     }
 ///////////////////////////////////////////////////////////////////////////////////////////
+    //2019, 84
+    public static int average(int[] arr){   //O(n)
+        double averageLeft, averageRight;
+        int sumLeft = 0, sumRight = 0;
 
+        for (int i = 0; i < arr.length; i++) {
+            sumLeft += arr[i];
+        }
+
+        double maxDifference = 0;
+        int indexToReturn = -1;
+
+        for (int i = arr.length - 1; i > 0; i--) {
+            averageLeft = calculateAverage(sumLeft - arr[i - 1], i + 1);
+
+            sumRight += arr[i];
+            averageRight = calculateAverage(sumRight, arr.length - i);
+
+            if(Math.abs(averageLeft - averageRight) > maxDifference){
+                maxDifference = Math.abs(averageLeft - averageRight);
+
+                indexToReturn = i - 1;
+            }
+        }
+        return indexToReturn;
+    }
+
+    private static double calculateAverage(int sum, int k){
+        return sum / k;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    public static int arithmeticCount(int num){
+        return arithmeticCount(num, num, 1);
+    }
+
+    private static int arithmeticCount(int sum,int num, int index){
+        if(index > num || sum < 0){
+            return 0;
+        }
+
+        if(sum == 0){
+            return 1;
+        }
+
+        return arithmeticCount(sum - index, num, index + 1) + arithmeticCount(sum, num, index + 1);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //2021, a
+    public static int findMaxPrice(int[] prices, int n){
+        return findMaxPrice(prices, n, 1);
+    }
+
+    private static int findMaxPrice(int[] prices, int n, int i){
+        if(i >= prices.length || i > n){
+            return 0;
+        }
+
+        if(n == 0){
+            return prices[i];
+        }
+
+        int opt1 = prices[i] + findMaxPrice(prices, n - i, 1);
+        int opt2 = findMaxPrice(prices, n, i + 1);
+
+        return Math.max(opt1, opt2);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static int count(int num){
+        return count(num, 1);
+    }
+
+    private static int count(int num, int counter){
+        if(num == 0){
+            return 1;
+        }
+
+        if(counter > num){
+            return 0;
+        }
+
+        int opt1 = count(num - counter, counter + 1);
+        int opt2 = count(num, counter + 1);
+
+        return opt1 + opt2;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    public static int lcs(String s, String t){
+        return lcs(s, 0, t, 0);
+    }
+
+    private static int lcs(String s, int i, String t, int j){
+        if(i >= s.length() || j >= t.length()){
+            return 0;
+        }
+
+        int a = 0;
+        if(s.charAt(i) == t.charAt(j)){
+            a = 1 + lcs(s, i + 1, t, j + 1);
+        }
+
+        int opt1 = lcs(s, i + 1, t, j);
+        int opt2 = lcs(s, i, t, j + 1);
+
+        return Math.max(a, Math.max(opt1, opt2));
+    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    public static int longOrderNum(String s){
+        return longOrderNum(s, 0, 0);
+    }
+
+    private static int longOrderNum(String s, int i, int count) {
+        if(i == s.length()){
+            return count;
+        }
+
+        int newCount = 0;
+        
+        if(s.charAt(i) >= '0' && s.charAt(i) <= '9'){
+            if(i == 0 || s.charAt(i) > s.charAt( i - 1)){
+                count += 1;
+                newCount = count;
+            } else {
+                newCount = 1;
+            }
+        }
+
+        return Math.max(count, longOrderNum(s, i + 1, newCount));
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static int maxEqualChar(String s){
+        return maxEqualChar(s, 0, 0);
+    }
+
+    private static int maxEqualChar(String s, int i, int count){
+        if(i == s.length()){
+            return count;
+        }
+
+        int newCount = 0;
+        if(i > 0 && s.charAt(i) == s.charAt(i - 1)){
+            count += 1;
+            newCount = count;
+        } else {
+            newCount = 1;
+        }
+
+        return Math.max(count, maxEqualChar(s, i + 1, newCount));
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static int minDiff(int[] arr){
+        return minDiff(arr, 0, 0, 0);
+    }
+
+    private static int minDiff(int[] arr, int i, int sum1, int sum2){
+        if(i == arr.length){
+            return Math.abs(sum1 - sum2);
+        }
+
+        int move1 = minDiff(arr, i + 1, sum1 + arr[i], sum2);
+        int move2 = minDiff(arr, i + 1, sum1, sum2 + arr[i]);
+
+        return Math.min(move1, move2);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static int longestFlat(int[] arr){
+        if(arr.length == 0){
+            return 0;
+        } else {
+            return longestFlat(arr, 0, Integer.MIN_VALUE);
+        }
+    }
+
+    private static int longestFlat(int[] arr, int i, int maxCount){
+       if(i == arr.length){
+           return maxCount;
+       }
+
+       int flatSequence = lengthFlatSequence(arr, i, arr[i], arr[i], 1);
+
+       if(flatSequence > maxCount){
+           maxCount = flatSequence;
+       }
+
+       return longestFlat(arr, i + 1, maxCount);
+    }
+
+    private static int lengthFlatSequence(int[] arr, int i, int base, int secVal, int count){
+        if(i == arr.length){
+            return count;
+        }
+
+        if(secVal == base && Math.abs(base - arr[i]) == 1){
+            return lengthFlatSequence(arr, i + 1, base, arr[i], count + 1);
+        }
+
+        if(arr[i] != base || arr[i] != secVal){
+            return count;
+        }
+
+        return lengthFlatSequence(arr, i + 1, base, secVal, count + 1);
+    }
 
     public static void main(String[] args) {
 
@@ -1347,6 +1543,36 @@ public class ExamsQuestions {
 
 //        minimumSubK(minSubArray, 2);
 
+        int[] average = {5, 7, -2, 10};
 
+//        System.out.println(average(average));
+
+//        System.out.println(arithmeticCount(7));
+
+        int[] findMax = {0, 4, 3, 10, 9, 10, 17, 17, 20};
+
+//        System.out.println(findMaxPrice(findMax, 8));
+
+//        System.out.println(count(7));
+
+//        String s1 = "abcdefgh";
+//        String s2 = "bcwxftjg";
+//        String s3 = "xwd";
+//        String s4 = "kmns";
+//        String s5 = "x12y3348";
+//        String s6 = "xxxyyyyz";
+
+//        System.out.println(maxEqualChar(s6));
+
+//        int[] isPer1 = {1,2,3,4};
+//        int[] isPer2 = {3,2,4,5};
+//
+//        System.out.println(isPermutation2(isPer1, isPer2));
+
+        int[] minDi = {1, 2, 7, 17, 6};
+
+        int[] flat = {4,5,6,5,4,3};
+
+        System.out.println(longestFlat(flat));
     }
 }
