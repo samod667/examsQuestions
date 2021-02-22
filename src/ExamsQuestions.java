@@ -1696,6 +1696,29 @@ public class ExamsQuestions {
     }
 
 
+    public static int meetingPoint(int[] a, int[] b){
+        int l = 0, m, r, minIndex = Integer.MAX_VALUE;
+
+        if(a.length > b.length){
+            r = b.length - 1;
+        } else {
+            r = a.length - 1;
+        }
+
+        while(l <= r){
+            m = (l + r) / 2;
+            if(a[m] == b[m]){
+                minIndex = Math.min(minIndex, m);
+            }
+            if(a[m] > b[m]){
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+        return minIndex == Integer.MAX_VALUE ? -1 : minIndex;
+    }
+
 
 
     public static void main(String[] args) {
@@ -1920,6 +1943,12 @@ public class ExamsQuestions {
 
         int[] sum = {4, 2, 3, 1};
 
-        System.out.println(isSum3(sum, 6));
+        int[] m1 = {19, 19, 13, 12, 9, 8, 5, 5, 5 } ;
+        int[] m2 = {0 , 12, 13, 14, 14,15,16,19,25 , 30, 35};
+
+        int[] m3 = {100, 100, 100, 90, 87, 86, 85, 82};
+        int[] m4 = {0, 5, 10, 20, 55, 76, 80, 82, 82, 82, 82};
+
+        System.out.println(meetingPoint(m3, m4));
     }
 }
