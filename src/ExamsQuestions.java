@@ -1174,6 +1174,31 @@ public class ExamsQuestions {
 
         System.out.println("Minimum sub-array is: (" + leftIndex + "," + rightIndex + ")");
     }
+
+    public static void minimumSubK2(int[] arr, int k){
+        int minSum = 0, tempSum = 0, minL = 0, minR = 0, l =0, r =0;
+
+        while(r < arr.length - 1){
+            while(r < k - 1){
+                minSum += arr[r++];
+                tempSum = minSum;
+            }
+
+            if(tempSum < minSum){
+                minSum = tempSum;
+                minL = l;
+                minR = r;
+            }
+
+            tempSum += arr[r+ 1];
+            tempSum -= arr[l];
+
+            r++;
+            l++;
+        }
+
+        System.out.println(minL  + " " + minR);
+    }
 ///////////////////////////////////////////////////////////////////////////////////////////
     //2019, 84
     public static boolean sumPower3(int num){
@@ -1406,6 +1431,272 @@ public class ExamsQuestions {
 
         return lengthFlatSequence(arr, i + 1, base, secVal, count + 1);
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean splitEqualMulti(int[] a){
+        return splitEqualMulti(a, 1, 1, 0);
+    }
+
+    private static boolean splitEqualMulti(int[] a, int sum1, int sum2, int i){
+        if(i == a.length){
+            return sum1 == sum2;
+        }
+
+        boolean temp1 = splitEqualMulti(a, sum1 * a[i], sum2, i + 1);
+        boolean temp2 = splitEqualMulti(a, sum1, sum2 * a[i], i + 1);
+
+        return temp1 || temp2;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static int lengthOfLongestSubstring(String s){
+        return lengthOfLongestSubstring(s, 0, "", 0);
+    }
+
+    private static int lengthOfLongestSubstring(String s, int i, String t, int count){
+       if(i == s.length()){
+           return count;
+       }
+
+       int temp1 = 0;
+
+       if(!isFound(t, s.charAt(i), 0)){
+           temp1 = lengthOfLongestSubstring(s, i + 1, t + s.charAt(i), count + 1);
+       } else {
+           return count;
+       }
+
+       int temp2 = lengthOfLongestSubstring(s, i + 1, "",0 );
+
+       return Math.max(temp1, temp2);
+    }
+
+    private static boolean isFound(String s, char c, int i){
+        if(i == s.length()){
+            return false;
+        }
+
+        if(s.charAt(i) == c){
+            return true;
+        }
+
+        return isFound(s, c, i + 1);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean isWay(int[] a){
+        return isWay(a, 0);
+    }
+
+    private static boolean isWay(int[] a, int i){
+        if(i == a.length - 1){
+            return true;
+        }
+       if(i < 0 || i >= a.length || a[i] == -1){
+           return false;
+       }
+
+       int temp = a[i];
+       a[i] = -1;
+
+       return isWay(a, i + temp) || isWay(a, i - temp);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static int howManySorted(int n, int max){
+        return howManySorted(n, max, 1);
+    }
+
+    private static int howManySorted(int length, int maxInt, int value){
+       if(value > maxInt){
+           return 0;
+       }
+
+       if(length == 0){
+           return 1;
+       }
+
+       int temp1 = howManySorted(length - 1, maxInt, value);
+       int temp2 = howManySorted(length, maxInt, value + 1);
+
+       return temp1 + temp2;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    public static int edit(String s1, String s2){
+        return edit(s1, s2, 0, 0);
+    }
+
+    private static int edit(String s1, String s2, int s1Index, int s2Index){
+        if(s1Index == s1.length() && s2Index == s2.length()){
+            return 0;
+        }
+
+        if(s1.length() == s1Index){
+            return edit(s1, s2, s1Index, s2Index + 1) + 1;
+        }
+
+        if(s2.length() == s2Index){
+            return edit(s1, s2, s1Index + 1, s2Index) + 1;
+        }
+
+        if(s1.charAt(s1Index) == s2.charAt(s2Index)){
+            return edit(s1, s2, s1Index + 1, s2Index + 1);
+        }
+
+        int temp1 = edit(s1, s2, s1Index, s2Index + 1) + 1;
+        int temp2 = edit(s1, s2, s1Index + 1, s2Index) + 1;
+
+        return Math.min(temp1, temp2);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static int where(int[] vec){
+        return where(vec, 0, 1, vec.length - 1);
+    }
+
+    private static int where(int[] vec, int left, int p, int right){
+        if(p == vec.length){
+            return -1;
+        }
+
+        if(sum(vec, left, p - 1) == sum(vec, p, right)){
+            return p;
+        }
+
+        return where(vec, left, p + 1, right);
+    }
+
+    private static int sum(int[] vec, int lo, int hi){
+        if(lo > hi){
+            return 0;
+        }
+
+        return vec[lo] + sum(vec, lo + 1, hi);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+//    public static boolean isBalanced(int[] vec, int k){
+//        return isBalanced(vec, k, 0, vec.length - 1);
+//    }
+//
+//    private static boolean isBalanced(int[] vec, int k, int left, int right){
+//
+//    }
+///////////////////////////////////////////////////////////////////////////////////////////
+    public static int minDragons(int[][] maze){
+        return minDragons(maze, 0, 0, 0);
+    }
+
+    private static int minDragons(int[][] maze, int i, int j, int count){
+        if(i >= maze.length || i < 0 || j < 0 || j >= maze[i].length || maze[i][j] == 0 || maze[i][j] == -1){
+            return Integer.MAX_VALUE;
+        }
+
+        if(maze[i][j] == 3){
+            count += 1;
+        }
+
+        if(i == maze.length - 1 && j == maze[i].length - 1){
+            return count;
+        }
+
+        int temp = maze[i][j];
+        maze[i][j] = -1;
+
+        int left = minDragons(maze, i, j + 1, count);
+        int right = minDragons(maze, i, j - 1, count);
+        int up = minDragons(maze, i - 1, j, count);
+        int down = minDragons(maze, i + 1, j, count);
+
+        maze[i][j] = temp;
+
+        return Math.min(Math.min(left, right), Math.min(up, down));
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    public static boolean covers(int[][] mat, int[] arr, int k){
+        return true;
+    }
+
+    private static boolean allZero(int[] arr){
+        return allZero(arr, 0);
+    }
+
+    private static boolean allZero(int[] arr, int i){
+        if(i == arr.length){
+            return true;
+        }
+
+        if(arr[i] != 0){
+            return false;
+        }
+
+        return allZero(arr, i + 1);
+    }
+
+    private static boolean isFound(int[] arr, int n){
+        return isFound(arr, n, 0);
+    }
+
+    private static boolean isFound(int[] arr, int n, int i){
+        if(i == arr.length){
+            return false;
+        }
+        if(arr[i] == n){
+            arr[i] = 0;
+            return true;
+        }
+        return isFound(arr, n, i + 1);
+    }
+
+    public static int minPath(char[][] minChess, int i, int j){
+        if(i < 0 || j < 0 || i >= minChess.length || j >= minChess[i].length || minChess[i][j] == 'X'){
+            return minChess.length * minChess.length;
+        }
+
+        if(minChess[i][j] == 'K'){
+            return 0;
+        }
+
+        char temp = minChess[i][j];
+        minChess[i][j] = 'X';
+
+        int opt1 = 1 + minPath(minChess, i + 2, j - 1);
+        int opt2 = 1 + minPath(minChess, i + 2, j + 1);
+        int opt3 = 1 + minPath(minChess, i - 1, j + 2);
+        int opt4 = 1 + minPath(minChess, i - 1, j + 2);
+        int opt5 = 1 + minPath(minChess, i - 2, j + 1);
+        int opt6 = 1 + minPath(minChess, i - 2, j - 1);
+        int opt7 = 1 + minPath(minChess, i - 1, j - 2);
+        int opt8 = 1 + minPath(minChess, i + 1, j - 2);
+
+        minChess[i][j] = temp;
+
+        int temp1 = Math.min(Math.min(opt1, opt2), Math.min(opt3, opt4));
+        int temp2 = Math.min(Math.min(opt5, opt6), Math.min(opt7, opt8));
+
+        return Math.min(temp1, temp2);
+    }
+
+    public static boolean isSum3(int[] a, int num){
+        return isSum3(a, num, 0, 0);
+    }
+
+    private static boolean isSum3(int[] a, int num, int i, int count){
+        if(num == 0){
+            return true;
+        }
+
+        if(i >= a.length){
+            return false;
+        }
+
+        if(count == 2){
+            return isSum3(a, num, i + 1, 0);
+        }
+
+        boolean opt1 = isSum3(a, num - a[i], i + 1, count + 1);
+        boolean opt2 = isSum3(a, num, i + 1, 0);
+
+        return opt1 || opt2;
+    }
+
+
+
 
     public static void main(String[] args) {
 
@@ -1573,6 +1864,62 @@ public class ExamsQuestions {
 
         int[] flat = {4,5,6,5,4,3};
 
-        System.out.println(longestFlat(flat));
+        int[] split = {2, 4, 6, 2, 3, 4};
+
+        String long1 = "abcabcbb";
+
+        int[] way = {1, 4, 3, 1, 2, 4, 3};
+        int[] way2 = {2, 4, 1 ,6, 4, 2, 4, 3, 5};
+
+        String edit1 = "sunday"; String edit2 = "saturday";
+
+        int[] where = {5, 6, 1, 2, 8};
+
+        int[][] maze1 = {
+                {1, 1, 3, 3},
+                {3, 0, 1, 1},
+                {3, 0, 0, 1},
+                {1, 3, 3, 1}
+        };
+
+        int[][] maze2 = {
+                {1, 1, 3, 3},
+                {3, 0, 1, 1},
+                {3, 0, 0, 0},
+                {1, 3, 3, 1}
+        };
+
+        int[][] maze3 = {
+                {1, 0, 3, 3},
+                {3, 0, 1, 1},
+                {3, 0, 0, 0},
+                {0, 3, 3, 1}
+        };
+
+        char[][] minChessBoard1 = {
+                {'O', 'O', 'O', 'O'},
+                {'O', 'O', 'O', 'O'},
+                {'O', 'O', 'K', 'O'},
+                {'H', 'O', 'O', 'O'}
+        };
+
+        char[][] minChessBoard2 = {
+                {'O', 'O', 'O', 'O'},
+                {'O', 'O', 'K', 'O'},
+                {'O', 'O', 'O', 'O'},
+                {'H', 'O', 'O', 'O'}
+        };
+        char[][] minChessBoard3 = {
+                {'O', 'O', 'K', 'O'},
+                {'O', 'O', 'H', 'O'},
+                {'O', 'O', 'O', 'O'},
+                {'O', 'O', 'O', 'O'}
+        };
+
+//        System.out.println(minPath(minChessBoard3, 1, 2));
+
+        int[] sum = {4, 2, 3, 1};
+
+        System.out.println(isSum3(sum, 6));
     }
 }
