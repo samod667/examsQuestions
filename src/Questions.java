@@ -317,7 +317,66 @@ public class Questions {
             }
             return false;
         }
-
         return split(a, diff, i + 1, sum1 + a[i], sum2) || split(a, diff, i + 1, sum1, sum2 + a[i]);
+    }
+
+    public static int minPrice(int[][] mat){
+        return minPrice(mat, 0, 1);
+    }
+
+    private static int minPrice(int[][] mat, int i, int j){
+        if(j == mat[i].length - 1){
+            return mat[i][j];
+        }
+
+        if(j >= mat[i].length || i > j || mat[i][j] == -1){
+            return Integer.MAX_VALUE;
+        }
+
+        int opt1 = mat[i][j] + minPrice(mat, j, j);
+        int opt2 = minPrice(mat, i, j + 1);
+
+        return Math.min(opt1, opt2);
+    }
+
+    public static boolean findAverage(int[] arr, double x){
+        int l = 0;
+        while(l < arr.length && arr[l] < x){
+            l++;
+        }
+        int r = l;
+        double sum = arr[l];
+        double count = 1;
+
+        while(sum / count != x){
+            double avg = sum / count;
+            if(avg > x){
+                l--;
+                if(l < 0){
+                    return false;
+                }
+                sum += arr[l];
+            } else {
+                r++;
+                if(r == arr.length){
+                    return false;
+                }
+                sum += arr[r];
+            }
+            count++;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[][] trainPath = {
+                {0, 15, 80, 90},
+                {-1, 0, 40, 50},
+                {-1, -1, 0, 70},
+                {-1, -1, -1, 0}
+        };
+
+        int[] avg = {2, 3, 8, 14, 15, 35};
+        System.out.println(findAverage(avg, 8.5));
     }
 }

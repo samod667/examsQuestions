@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class ExamsQuestions {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1719,6 +1721,406 @@ public class ExamsQuestions {
         return minIndex == Integer.MAX_VALUE ? -1 : minIndex;
     }
 
+    public static int countTriplets(int[] a, int num){
+        int h = a.length - 1, count = 0;
+
+        for (int i = 0; i < a.length - 2; i++) {
+            for (int j = i + 1; j < h; j++) {
+                if(a[i] + a[j] + a[h] < num){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public static int countOddSum(int[] a){
+        int count = 0, sum = a[0], l = 0, r = 1;
+
+        while(l < a.length && r < a.length){
+            sum += a[r];
+
+            if(isOdd(sum)){
+                count++;
+                r++;
+            } else {
+                while(l != r){
+                    sum -= a[l];
+                    if(isOdd(sum)){
+                        count++;
+                    }
+
+                    if(isOdd(a[l])){
+                        count++;
+                    }
+                    l++;
+                }
+            }
+            if(r == a.length - 1){
+                while(l != r){
+                    sum -= a[l];
+                    if(isOdd(sum)){
+                        count++;
+                    }
+
+                    if(isOdd(a[l])){
+                        count++;
+                    }
+                    l++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public static int count2(int[] a, int x){
+        int l = 0, r = a.length, m, firstIndex = -1, count = 0;
+
+        while(l <= r) {  //Find the first element of x
+            m = (l + r) / 2;
+
+            if (a[m] > x) {
+                r = m - 1;
+            } else if (a[m] < x) {
+                l = m + 1;
+            } else {
+                firstIndex = m;
+                r = m - 1;
+            }
+        }
+
+        while(a[firstIndex] == x && firstIndex < a.length){
+            count++;
+            firstIndex++;
+        }
+
+        return firstIndex;
+    }
+
+    private static boolean isOdd(int num){
+        return num % 2 == 1;
+    }
+
+    public static boolean sum2(int[] a, int x){
+        int l = 0, r = a.length - 1, sum = 0;
+
+        while(r > l){
+            sum = a[l] + a[r];
+
+            if(sum == x){
+                return true;
+            }
+
+            if(sum > x){
+                r--;
+            } else {
+                l++;
+            }
+        }
+        return false;
+    }
+
+    public static boolean sum3(int[] a, int x){
+        int n = a.length;
+
+        int h = n - 1, m, sum;
+        for (int i = 0; i < n - 2; i++) {
+            m = i + 1;
+
+            while(m < h){
+             sum = a[i] + a[m] + a[h];
+
+             if(sum == x){
+                 return true;
+             }
+
+             if(sum > x){
+                 h--;
+             } else {
+                 m++;
+             }
+            }
+        }
+        return false;
+    }
+
+    public static int isPeak(int[] a){
+        int max = -1;
+
+        for (int i = 0; i < a.length; i++) {
+            if(isPeak(a, i)){
+                max = Math.max(max, a[i]);
+            }
+        }
+        return max;
+    }
+
+    private static boolean isPeak(int[] a, int i){
+        if(i == 0){
+            return a[i] > a[i + 1];
+        }
+        if(i == a.length - 1){
+            return a[i] > a[i - 1];
+        }
+
+        if(a[i] > a[i - 1] && a[i] > a[i + 1]){
+            return true;
+        }
+        return false;
+    }
+
+    public static int isPeak2(int[] a){
+        int l = 0, r = a.length - 1, m;
+
+        while(l <= r){
+            m = (l + r) / 2;
+
+            if((m == 0 || a[m - 1] <= a[m]) && (m == a.length - 1 || a[m + 1] <= a[m])){
+                return m;
+            }
+            if(m > 0 && a[m - 1] > a[m]){
+                 r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        return -1;
+    }
+
+    public static int closestSumToZero(int[] a){
+        Arrays.sort(a);
+
+        int l = 0, r = a.length - 1, m, min = Integer.MAX_VALUE, sum = 0;
+        int minL = -1, minR = -1;
+
+        while(l < r){
+            sum = Math.abs(a[l] + a[r]);
+
+            if(Math.abs(sum) < Math.abs(min)){
+                min = sum;
+                minL = l;
+                minR = r;
+            } else if (sum < 0){
+                l++;
+            } else {
+                r--;
+            }
+        }
+        System.out.println(a[minL] + " + " + a[minR]);
+        return min;
+    }
+
+    public static int findCeil(int[] a, int x){
+        int l = 0, r = a.length - 1, m, minCeil = Integer.MAX_VALUE;
+
+        while(l <= r){
+            m = (l + r) / 2;
+
+            if(a[m] == x){
+                return m;
+            }
+
+            if(a[m] > x && a[m] < minCeil){
+                minCeil = a[m];
+                r = m - 1;
+            } else{
+                l = m + 1;
+            }
+        }
+
+        return minCeil == Integer.MAX_VALUE ? -1 : minCeil;
+    }
+
+    public static void printClosest(int[] a,int[] b, int x){
+            int l = 0, r = b.length - 1, minDiff = Integer.MAX_VALUE;
+            int res, minL = -1, minR = -1;
+
+            while(r > 0 && l < a.length){
+                res = Math.abs(a[l] + b[r] - x);
+
+                if(res < minDiff){
+                    minDiff = res;
+                    minL = l;
+                    minR = r;
+                    if(minDiff == 0){
+                        break;
+                    }
+                } else if(a[l] + b[r] > x){
+                    r--;
+                } else {
+                    l++;
+                }
+            }
+        System.out.println(a[minL] + " + " + b[minR]);
+    }
+
+    public static int twoSumUnSorted(int[] a){
+        int first = Math.max(a[0], a[1]);
+        int second = Math.min(a[0], a[1]);
+
+        for (int i = 2; i < a.length; i++) {
+            if(a[i] > first){
+                second = first;
+                first = a[i];
+            } else if(a[i] > second){
+                second = a[i];
+            }
+        }
+        return first + second;
+    }
+
+    public static int threeSumUnsorted(int[] a){
+        int first = Integer.MIN_VALUE, second = Integer.MIN_VALUE, third = Integer.MIN_VALUE;
+
+        for (int i = 0; i < a.length; i++) {
+            if(a[i] > first){
+                third = second;
+                second = first;
+                first = a[i];
+            } else if(a[i] > second){
+                third = second;
+                second = a[i];
+            } else if(a[i] > third){
+                third = a[i];
+            }
+        }
+        return first + second + third;
+    }
+
+    public static int tripletsZeroSum(int[] a){
+        int count = 0, n = a.length, m, h;
+
+        Arrays.sort(a);
+
+        for (int i = 0; i < n - 2; i++) {
+            m = i + 1;
+            h = n - 1;
+
+            while(m < h){
+                int res = a[i] + a[m] + a[h];
+                if(res == 0){
+                    count++;
+                    m++;
+                    h--;
+                } else if(res > 0){
+                    h--;
+                } else {
+                    m++;
+                }
+            }
+        }
+        return count;
+    }
+//
+//    public static int minPrice(int[][] mat){
+//        return minPrice(mat, 0, 0, mat.length - 1);
+//    }
+//
+//    private static int minPrice(int[][] mat, int i, int j, int count){
+//        if(i >= mat.length || j >= mat.length || mat[i][j] == - 1 || count <= 0 || i > j){
+//            return Integer.MAX_VALUE;
+//        }
+//
+//        if(j == mat[i].length - 1){	//Base case; Return ticket price
+//            return mat[i][j];
+//        }
+//
+//        //Recursive calls to go down or right - trying all possibilities within the mat
+//        int down = mat[i][j] + minPrice(mat, i + count, j, count);
+//
+//        int right = mat[i][j] + minPrice(mat, i, j + count, count - (j + count));
+//
+//        //Another recursive call to decrement count value (to check all possible cases in j)
+//        int temp = minPrice(mat, i, j, count - 1);
+//
+//        //return the min value after each call
+//        return Math.min(Math.min(down, right), temp);
+//    }
+
+
+    private static int minPrice(int[][] mat, int i, int j, int count){
+        if(i >= mat.length || j >= mat.length || mat[i][j] == - 1 || i > j){
+            return Integer.MAX_VALUE;
+        }
+
+        if(j == mat[i].length - 1){	    //Base case; Return ticket price
+            return mat[i][j];
+        }
+
+        //Recursive calls to go down or right - trying all possibilities within the mat
+        int down = mat[i][j] + minPrice(mat, i + count, j, count);
+
+        int right = mat[i][j] + minPrice(mat, i, j + count, count - (j + count));
+
+        //Another recursive call to decrement count value (to check all possible cases in j)
+        int temp = minPrice(mat, i, j, count - 1);
+
+        //return the min value after each call
+        return Math.min(Math.min(down, right), temp);
+    }
+
+//      public static int minPrice (int[][] mat)
+//      {
+//    return minPrice(mat, 0, 0, 0);
+//      }
+//    private static int minPrice (int[][] mat, int i, int j, int sum)
+//    {
+//        if(j == mat[0].length-1)
+//            return (sum+mat[i][j]);
+//        if(i == mat.length ||j == mat[0].length || mat[i][j] == -1)
+//            return (Integer.MAX_VALUE);
+//        return
+//                Math.min(minPrice(mat,i,mat.length-1,sum),minPrice(mat,i+1,j+1,sum+mat[i][j+1]));
+//    }
+
+    public static boolean findAverage(int[] arr, double x) {
+        int left = 0;
+        while (left < arr.length && arr[left] < x) {
+            left++;
+        }
+        int right = left;
+        double sum = arr[left];
+        double num = 1;
+        while (sum / num != x) {
+            if (sum / num > x) {
+                left--;
+                if (left < 0) {
+                    return false;
+                }
+                sum = sum + arr[left];
+            } else {
+                right++;
+                if (right >= arr.length) {
+                    return false;
+                }
+                sum = sum + arr[right];
+            }
+            num++;
+        }
+
+        System.out.println(left + "---" + right);
+
+        return true;
+    }
+
+    public static int minPrice(int[][] mat) {
+        return minPrice(mat, 0, 1);
+    }
+
+    private static int minPrice(int[][] mat, int currentStation, int throughStation) {
+        if (currentStation == mat.length - 1) {
+            return 0;
+        }
+
+        if (throughStation >= mat.length) {
+            return Integer.MAX_VALUE;
+        }
+
+        int minPriceThroughStation = mat[currentStation][throughStation] + minPrice(mat, throughStation, throughStation + 1);
+        int minPriceNotThroughStation = minPrice(mat, currentStation, throughStation + 1);
+
+        return Math.min(minPriceThroughStation, minPriceNotThroughStation);
+    }
 
 
     public static void main(String[] args) {
@@ -1949,6 +2351,34 @@ public class ExamsQuestions {
         int[] m3 = {100, 100, 100, 90, 87, 86, 85, 82};
         int[] m4 = {0, 5, 10, 20, 55, 76, 80, 82, 82, 82, 82};
 
-        System.out.println(meetingPoint(m3, m4));
+        int[] triple = {-2, 0, 1, 3};
+
+        int[] countOdd = {5, 4, 4, 5, 1, 3};
+
+        int[] sum2 = {-2, 3, 5, 7, 12};
+
+        int[] peak = {10, 20, 15, 2, 23, 90, 67};
+
+        int[] minEl = {1, 60, -10, 70, -80, 85};
+
+        int[] ceil = {1, 2, 8, 10, 10, 12, 19};
+
+        int ar1[] = {1, 4, 5, 7};
+        int ar2[] = {10, 20, 30, 40};
+
+        int[] ar3 = {12, 34, 10, 6, 40};
+        int ar4[] = { 1, 0, 8, 6, 4, 2 };
+        int[] ar5 = {0, -1, 2, -3, 1};
+
+        int[][] train = {
+                {0, 15, 80, 90},
+                {-1, 0, 40, 50},
+                {-1, -1, 0, 70},
+                {-1, -1, -1, 0}
+        };
+
+        int[] avg = {2, 3, 8, 14, 15, 35};
+
+        System.out.println(minPrice(train));
     }
 }
